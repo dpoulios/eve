@@ -1,0 +1,29 @@
+diff --git a/board/raspberrypi/rpi/rpi.c b/board/raspberrypi/rpi/rpi.c
+index 2851ebc9..74effa39 100644
+--- a/board/raspberrypi/rpi/rpi.c
++++ b/board/raspberrypi/rpi/rpi.c
+@@ -575,8 +575,10 @@ int ft_board_setup(void *blob, struct bd_info *bd)
+ 	update_fdt_from_fw(blob, (void *)fw_dtb_pointer);
+ 
+ 	node = fdt_node_offset_by_compatible(blob, -1, "simple-framebuffer");
+-	if (node < 0)
++	if (node < 0) {
+ 		fdt_simplefb_add_node(blob);
++		fdt_simplefb_enable_existing_node(blob);
++        }
+ 	else
+ 		fdt_simplefb_enable_and_mem_rsv(blob);
+ 
+diff --git a/boot/fdt_simplefb.c b/boot/fdt_simplefb.c
+index 069ced75..c8ae63b3 100644
+--- a/boot/fdt_simplefb.c
++++ b/boot/fdt_simplefb.c
+@@ -77,7 +77,7 @@ int fdt_simplefb_add_node(void *blob)
+  * @blob:	device-tree
+  * Return:	0 on success, non-zero otherwise
+  */
+-static int fdt_simplefb_enable_existing_node(void *blob)
++int fdt_simplefb_enable_existing_node(void *blob)
+ {
+ 	int off;
+ 

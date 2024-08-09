@@ -5,7 +5,7 @@ RUN eve-alpine-deploy.sh
 
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
-ENV VERSION v2022.10
+ENV VERSION v2024.04
 ENV SOURCE_URL https://github.com/u-boot/u-boot/archive/${VERSION}.tar.gz
 ENV RASPBERRY_FIRMWARE_BLOBS_VERSION 1.20211007
 ENV RASPBERRY_FIRMWARE_BLOBS https://github.com/raspberrypi/firmware/raw/${RASPBERRY_FIRMWARE_BLOBS_VERSION}
@@ -26,7 +26,7 @@ ENV TARGET qemu-x86_64_defconfig
 RUN sed -ie 's#CONFIG_IS_ENABLED(X86_64)#1#' ./arch/x86/include/asm/byteorder.h
 
 FROM build-base AS build-arm64
-ENV TARGET rpi_4_defconfig
+ENV TARGET rpi_arm64_defconfig
 RUN for p in /tmp/patches/patches-"${VERSION}"/*.patch ; do patch -p1 < "$p" || exit 1 ; done
 
 # FIXME: copy RPi4 dtb
@@ -37,6 +37,8 @@ ADD ${RASPBERRY_FIRMWARE_BLOBS}/boot/fixup4.dat /tmp/rpi/fixup4.dat
 # hadolint ignore=DL3020
 ADD ${RASPBERRY_FIRMWARE_BLOBS}/boot/start4.elf /tmp/rpi/start4.elf
 # hadolint ignore=SC3060
+RUN  dtc -@ -I dts -O dtb -o /tmp/rpi/bcm2712-rpi-5-b.dtb /tmp/rpi/bcm2712-rpi-5-b.dts \
+     && rm /tmp/rpi/bcm2712-rpi-5-b.dts
 RUN  for i in /tmp/rpi/overlays/*.dts ; do                                         \
           dtc -@ -I dts -O dtb -o "${i/.dts/.dtbo}" "$i" && rm "$i"     ;\
        done                                                                         ;\
