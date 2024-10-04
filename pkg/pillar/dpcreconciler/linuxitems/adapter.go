@@ -150,6 +150,15 @@ func (c *AdapterConfigurator) Create(ctx context.Context, item depgraph.Item) er
 		c.Log.Error(err)
 		return err
 	}
+	// Make sure the ethernet interface is DOWN before renaming
+	// and changing the MAC address, otherwise we get error
+	// `Device or resource busy`.
+	if err := netlink.LinkSetDown(link); err != nil {
+		err = fmt.Errorf("netlink.LinkSetDown(%s) failed: %v",
+			adapter.IfName, err)
+		c.Log.Error(err)
+		return err
+	}
 	// Get MAC address and create the alternate with the group bit toggled.
 	macAddr := link.Attrs().HardwareAddr
 	altMacAddr := c.alternativeMAC(link.Attrs().HardwareAddr)
@@ -308,7 +317,7 @@ func (c *AdapterConfigurator) Delete(ctx context.Context, item depgraph.Item) er
 	// and changing the MAC address, otherwise we get error
 	// `Device or resource busy`.
 	if err := netlink.LinkSetDown(kernLink); err != nil {
-		err = fmt.Errorf("netlink.LinkSetUp(%s) failed: %v",
+		err = fmt.Errorf("netlink.LinkSetDown(%s) failed: %v",
 			kernIfname, err)
 		c.Log.Error(err)
 		return err
