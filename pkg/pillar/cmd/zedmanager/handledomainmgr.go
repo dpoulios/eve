@@ -121,8 +121,12 @@ func MaybeAddDomainConfig(ctx *zedmanagerContext,
 			}
 		}
 	}
-	if dc.BootLoader == "" && (dc.VirtualizationModeOrDefault() == types.FML || runtime.GOARCH == "arm64") {
-		dc.BootLoader = "/usr/lib/xen/boot/OVMF_CODE.fd"
+	if dc.BootLoader == "" {
+		if dc.VirtualizationModeOrDefault() == types.FML {
+			dc.BootLoader = "/usr/lib/xen/boot/OVMF_CODE.fd"
+		} else if runtime.GOARCH == "arm64" {
+			dc.BootLoader = "/usr/lib/xen/boot/ovmf.bin"
+		}
 	}
 	if ns != nil {
 		adapterCount := len(ns.AppNetAdapterList)
