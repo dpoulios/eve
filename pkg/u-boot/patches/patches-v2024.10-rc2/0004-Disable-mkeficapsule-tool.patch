@@ -1,0 +1,27 @@
+From 54888fa6e76563d3a66bea75c0b7095472eb3479 Mon Sep 17 00:00:00 2001
+From: Dimitrios Poulios <dpoulios85@gmail.com>
+Date: Mon, 4 Nov 2024 15:45:03 +0200
+Subject: [PATCH] Disable mkeficapsule tool
+
+Disable mkeficapsule tool to overcome riscv64 build error
+
+Signed-off-by: Dimitrios Poulios <dpoulios85@gmail.com>
+---
+ tools/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/tools/Kconfig b/tools/Kconfig
+index 5c75af48..1afe3b1d 100644
+--- a/tools/Kconfig
++++ b/tools/Kconfig
+@@ -98,7 +98,6 @@ config TOOLS_SHA512
+ 
+ config TOOLS_MKEFICAPSULE
+ 	bool "Build efimkcapsule command"
+-	default y if EFI_LOADER
+ 	help
+ 	  This command allows users to create a UEFI capsule file and,
+ 	  optionally sign that file. If you want to enable UEFI capsule
+-- 
+2.45.2
+
