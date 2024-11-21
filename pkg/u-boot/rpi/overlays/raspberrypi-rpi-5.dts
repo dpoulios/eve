@@ -1,0 +1,29 @@
+// SMBIOS tables support for default Raspberry Pi 5
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2712";
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			sysinfo {
+				compatible = "u-boot,sysinfo-smbios";
+				smbios {
+					system {
+						manufacturer = "raspberrypi";
+						product = "rpi5";
+					};
+					baseboard {
+						manufacturer = "raspberrypi";
+						product = "rpi5";
+					};
+					chassis {
+						manufacturer = "raspberrypi";
+						product = "rpi5";
+					};
+				};
+			};
+		};
+	};
+};

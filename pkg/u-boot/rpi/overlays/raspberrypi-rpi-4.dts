@@ -1,0 +1,29 @@
+// SMBIOS tables support for default Raspberry Pi 4
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2711";
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			sysinfo {
+				compatible = "u-boot,sysinfo-smbios";
+				smbios {
+					system {
+						manufacturer = "raspberrypi";
+						product = "rpi4";
+					};
+					baseboard {
+						manufacturer = "raspberrypi";
+						product = "rpi4";
+					};
+					chassis {
+						manufacturer = "raspberrypi";
+						product = "rpi4";
+					};
+				};
+			};
+		};
+	};
+};

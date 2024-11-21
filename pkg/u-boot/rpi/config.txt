@@ -47,6 +47,14 @@ arm_boost=1
 # Allow user overrides of config options
 include extraconfig.txt
 
+[pi4]
+dtoverlay=raspberrypi-rpi-4
+
+[pi5]
+dtoverlay=raspberrypi-rpi-5
+
+[all]
+
 # Uncomment for the following line for OnLogic FR201
 # Please, don't forget to disable overlay bcm2711-spi-tpm-slb9670
 #include fr201.txt
